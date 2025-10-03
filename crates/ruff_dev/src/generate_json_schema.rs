@@ -17,6 +17,8 @@ pub(crate) struct Args {
 }
 
 pub(crate) fn main(args: &Args) -> Result<()> {
+    // TODO: Should we have a Transformer that reverts the changes at
+    // https://github.com/GREsau/schemars/commit/ce153808636e6601abf9993f43a02a90d583c934
     let schema = schema_for!(Options);
     let schema_string = serde_json::to_string_pretty(&schema).unwrap();
     let filename = "ruff.schema.json";
