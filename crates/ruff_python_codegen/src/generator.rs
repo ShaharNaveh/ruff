@@ -2110,35 +2110,25 @@ if True:
         );
     }
 
-    #[test_case::test_case(r#""'hello'""#, r#""'hello'""# ; "basic str ignored")]
-    #[test_case::test_case(r#"b"'hello'""#, r#"b"'hello'""# ; "basic bytes ignored")]
-    #[test_case::test_case(r#""hello""#, "'hello'" ; "basic str single")]
-    #[test_case::test_case(r#"b"hello""#, "b'hello'" ; "basic bytes single")]
-    #[test_case::test_case("'hello'", "'hello'"  ; "remain str single")]
-    #[test_case::test_case(r#"x: list["str"]"#, "x: list['str']" ; "type ann single")]
-    #[test_case::test_case(r#"f"hello""#, "f'hello'" ; "basic fstring single")]
-    fn ast_unparse_quote(inp: &str, out: &str) {
-        let got = round_trip_with(
+    #[test_case::test_case(r#""'hello'""#, r#""'hello'""# ; "basic str ignored quote")]
+    #[test_case::test_case(r#"b"'hello'""#, r#"b"'hello'""# ; "basic bytes ignored quote")]
+    #[test_case::test_case(r#""hello""#, "'hello'" ; "basic str single quote")]
+    #[test_case::test_case(r#"b"hello""#, "b'hello'" ; "basic bytes single quote")]
+    #[test_case::test_case("'hello'", "'hello'"  ; "remain str single quote")]
+    #[test_case::test_case(r#"x: list["str"]"#, "x: list['str']" ; "type ann single quote")]
+    #[test_case::test_case(r#"f"hello""#, "f'hello'" ; "basic fstring single quote")]
+    #[test_case::test_case("a,", "(a,)" ; "basic single element tuple parentheses")]
+    #[test_case::test_case("a, b", "(a, b)" ; "basic multi element tuple parentheses")]
+    #[test_case::test_case("x = a,", "x = (a,)" ; "basic assign single tuple parentheses")]
+    #[test_case::test_case("x = a, b", "x = (a, b)" ; "basic assign multi element tuple parentheses")]
+    #[test_case::test_case("a, (b, c)", "(a, (b, c))" ; "nested tuple parentheses")]
+    fn ast_unparse_mode(input: &str, expected: &str) {
+        let result = round_trip_with(
             &Indentation::default(),
             LineEnding::default(),
             UnparseMode::AstUnparse,
-            inp,
+            input,
         );
-        assert_eq!(got, out);
-    }
-
-    #[test_case::test_case("a,", "(a,)" ; "basic single")]
-    #[test_case::test_case("a, b", "(a, b)" ; "basic multi")]
-    #[test_case::test_case("x = a,", "x = (a,)" ; "basic assign single")]
-    #[test_case::test_case("x = a, b", "x = (a, b)" ; "basic assign multi")]
-    #[test_case::test_case("a, (b, c)", "(a, (b, c))" ; "nested")]
-    fn ast_tuple_parentheses(inp: &str, out: &str) {
-        let got = round_trip_with(
-            &Indentation::default(),
-            LineEnding::default(),
-            UnparseMode::AstUnparse,
-            inp,
-        );
-        assert_eq!(got, out);
+        assert_eq!(result, expected);
     }
 }
