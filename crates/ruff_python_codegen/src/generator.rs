@@ -64,7 +64,7 @@ mod precedence {
     pub(crate) const MAX: u8 = 63;
 }
 
-#[derive(Default)]
+#[derive(Default, Eq, PartialEq)]
 pub enum Mode {
     /// Ruff's default unparsing behaviour.
     #[default]
@@ -423,7 +423,8 @@ impl<'a> Generator<'a> {
                 node_index: _,
             }) => {
                 statement!({
-                    let need_parens = matches!(target.as_ref(), Expr::Name(_)) && !simple;
+                    let need_parens = !simple
+                        && matches!(target.as_ref(), Expr::Name(_) | Expr::Tuple(_) if self.mode == Mode::AstUnparse);
                     self.p_if(need_parens, "(");
                     self.unparse_expr(target, precedence::ANN_ASSIGN);
                     self.p_if(need_parens, ")");
