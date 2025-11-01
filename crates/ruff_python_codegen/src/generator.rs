@@ -3,7 +3,7 @@
 use std::fmt::Write;
 use std::ops::Deref;
 
-use ruff_python_ast::comparable::ComparableExpr;
+//use ruff_python_ast::comparable::ComparableExpr;
 use ruff_python_ast::str::Quote;
 use ruff_python_ast::{
     self as ast, Alias, AnyStringFlags, ArgOrKeyword, BoolOp, BytesLiteralFlags, CmpOp,
@@ -18,7 +18,7 @@ use ruff_source_file::LineEnding;
 use super::stylist::{Indentation, Stylist};
 
 mod precedence {
-    pub(crate) const MIN: u8 = 0;
+    // pub(crate) const MIN: u8 = 0;
     pub(crate) const NAMED_EXPR: u8 = 1;
     pub(crate) const ASSIGN: u8 = 3;
     pub(crate) const ANN_ASSIGN: u8 = 5;
@@ -424,14 +424,7 @@ impl<'a> Generator<'a> {
                 node_index: _,
             }) => {
                 statement!({
-                    let need_parens = match self.mode {
-                        Mode::Default => !simple && matches!(target.as_ref(), Expr::Name(_)),
-                        Mode::AstUnparse => match target.as_ref() {
-                            Expr::Tuple(_) => true,
-                            Expr::Name(_) => !simple,
-                            _ => false,
-                        },
-                    };
+                    let need_parens = !simple && matches!(target.as_ref(), Expr::Name(_));
                     self.p_if(need_parens, "(");
                     self.unparse_expr(target, precedence::ANN_ASSIGN);
                     self.p_if(need_parens, ")");
@@ -904,10 +897,7 @@ impl<'a> Generator<'a> {
                 self.p_id(name);
                 if let Some(expr) = default {
                     self.p(" = ");
-                    match self.mode {
-                        Mode::Default => self.unparse_expr(expr, precedence::MAX),
-                        Mode::AstUnparse => self.unparse_expr(expr, precedence::MIN),
-                    };
+                    self.unparse_expr(expr, precedence::MAX);
                 }
             }
             TypeParam::ParamSpec(TypeParamParamSpec { name, default, .. }) => {
@@ -944,14 +934,6 @@ impl<'a> Generator<'a> {
                 ret
             }};
         }
-        let mut file = std::fs::OpenOptions::new()
-            .write(true)
-            .append(true)
-            .open("/data/data/com.termux/files/home/Work/RustPython/out.txt")
-            .unwrap();
-        use std::io::Write;
-        let x = "hey";
-        let _ = writeln!(file, "{:?}", &x);
         match ast {
             Expr::BoolOp(ast::ExprBoolOp {
                 op,
@@ -1343,11 +1325,7 @@ impl<'a> Generator<'a> {
                 if tuple.is_empty() {
                     self.p("()");
                 } else {
-                    let lvl = match self.mode {
-                        Mode::Default => precedence::TUPLE,
-                        Mode::AstUnparse => precedence::MIN,
-                    };
-                    group_if!(lvl, {
+                    group_if!(precedence::TUPLE, {
                         let mut first = true;
                         for item in tuple {
                             self.p_delim(&mut first, ", ");
