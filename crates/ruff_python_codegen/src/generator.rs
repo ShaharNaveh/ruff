@@ -3,6 +3,7 @@
 use std::fmt::Write;
 use std::ops::Deref;
 
+use ruff_python_ast::comparable::ComparableExpr;
 use ruff_python_ast::str::Quote;
 use ruff_python_ast::{
     self as ast, Alias, AnyStringFlags, ArgOrKeyword, BoolOp, BytesLiteralFlags, CmpOp,
@@ -64,7 +65,7 @@ mod precedence {
     pub(crate) const MAX: u8 = 63;
 }
 
-#[derive(Default, Eq, PartialEq)]
+#[derive(Default)]
 pub enum Mode {
     /// Ruff's default unparsing behaviour.
     #[default]
@@ -423,8 +424,14 @@ impl<'a> Generator<'a> {
                 node_index: _,
             }) => {
                 statement!({
-                    let need_parens = !simple
-                        && matches!(target.as_ref(), Expr::Name(_) | Expr::Tuple(_) if self.mode == Mode::AstUnparse);
+                    let need_parens = match self.mode {
+                        Mode::Default => !simple && matches!(target.as_ref(), Expr::Name(_)),
+                        Mode::AstUnparse => match target.as_ref() {
+                            Expr::Tuple(_) => true,
+                            Expr::Name(_) => !simple,
+                            _ => false,
+                        },
+                    };
                     self.p_if(need_parens, "(");
                     self.unparse_expr(target, precedence::ANN_ASSIGN);
                     self.p_if(need_parens, ")");
@@ -897,7 +904,10 @@ impl<'a> Generator<'a> {
                 self.p_id(name);
                 if let Some(expr) = default {
                     self.p(" = ");
-                    self.unparse_expr(expr, precedence::MAX);
+                    match self.mode {
+                        Mode::Default => self.unparse_expr(expr, precedence::MAX),
+                        Mode::AstUnparse => self.unparse_expr(expr, precedence::MIN),
+                    };
                 }
             }
             TypeParam::ParamSpec(TypeParamParamSpec { name, default, .. }) => {
@@ -934,6 +944,14 @@ impl<'a> Generator<'a> {
                 ret
             }};
         }
+        let mut file = std::fs::OpenOptions::new()
+            .write(true)
+            .append(true)
+            .open("/data/data/com.termux/files/home/Work/RustPython/out.txt")
+            .unwrap();
+        use std::io::Write;
+        let x = "hey";
+        let _ = writeln!(file, "{:?}", &x);
         match ast {
             Expr::BoolOp(ast::ExprBoolOp {
                 op,
@@ -2122,6 +2140,8 @@ if True:
     #[test_case::test_case("x = a,", "x = (a,)" ; "basic assign single tuple parentheses")]
     #[test_case::test_case("x = a, b", "x = (a, b)" ; "basic assign multi element tuple parentheses")]
     #[test_case::test_case("a, (b, c)", "(a, (b, c))" ; "nested tuple parentheses")]
+    #[test_case::test_case("def f(x: (a,)) -> (b, c):\n    pass", "def f(x: (a,)) -> (b, c):\n    pass" ; "type ann tuple parentheses")]
+    #[test_case::test_case("[(x,) for x, in (a,)]", "[(x,) for x, in (a,)]" ; "list comprehension tuple parentheses")]
     fn ast_unparse_mode(input: &str, expected: &str) {
         let result = round_trip_with(
             &Indentation::default(),
