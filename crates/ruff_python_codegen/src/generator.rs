@@ -3,7 +3,6 @@
 use std::fmt::Write;
 use std::ops::Deref;
 
-//use ruff_python_ast::comparable::ComparableExpr;
 use ruff_python_ast::str::Quote;
 use ruff_python_ast::{
     self as ast, Alias, AnyStringFlags, ArgOrKeyword, BoolOp, BytesLiteralFlags, CmpOp,
@@ -18,7 +17,6 @@ use ruff_source_file::LineEnding;
 use super::stylist::{Indentation, Stylist};
 
 mod precedence {
-    pub(crate) const MIN: u8 = 0;
     pub(crate) const NAMED_EXPR: u8 = 1;
     pub(crate) const ASSIGN: u8 = 3;
     pub(crate) const ANN_ASSIGN: u8 = 5;
@@ -65,6 +63,26 @@ mod precedence {
     pub(crate) const MAX: u8 = 63;
 }
 
+mod ast_unparse_precedence {
+    pub(crate) const TUPLE: u8 = 0;
+    pub(crate) const TEST: u8 = 1;
+    pub(crate) const OR: u8 = 2;
+    pub(crate) const AND: u8 = 3;
+    pub(crate) const NOT: u8 = 4;
+    pub(crate) const CMP: u8 = 5;
+    pub(crate) const EXPR: u8 = 6;
+    pub(crate) const BOR: u8 = EXPR;
+    pub(crate) const BOXR: u8 = 7;
+    pub(crate) const BAND: u8 = 8;
+    pub(crate) const SHIFT: u8 = 9;
+    pub(crate) const ARITH: u8 = 10;
+    pub(crate) const TERM: u8 = 11;
+    pub(crate) const FACTOR: u8 = 12;
+    pub(crate) const POWER: u8 = 13;
+    pub(crate) const AWAIT: u8 = 14;
+    pub(crate) const ATOM: u8 = 15;
+}
+
 #[derive(Default)]
 pub enum Mode {
     /// Ruff's default unparsing behaviour.
@@ -84,6 +102,22 @@ impl Mode {
         match self {
             Self::Default => flags.quote_style(),
             Self::AstUnparse => Quote::Single,
+        }
+    }
+
+    #[must_use]
+    const fn comprehension_element_precedence(&self) -> u8 {
+        match self {
+            Self::Default => precedence::COMPREHENSION_ELEMENT,
+            Self::AstUnparse => ast_unparse_precedence::TEST,
+        }
+    }
+
+    #[must_use]
+    const fn comma_precedence(&self) -> u8 {
+        match self {
+            Self::Default => precedence::COMMA,
+            Self::AstUnparse => ast_unparse_precedence::TEST,
         }
     }
 }
@@ -145,7 +179,11 @@ impl<'a> Generator<'a> {
 
     /// Generate source code from an [`Expr`].
     pub fn expr(mut self, expr: &Expr) -> String {
-        self.unparse_expr(expr, precedence::MIN);
+        let lvl = match self.mode {
+            Mode::Default => 0,
+            Mode::AstUnparse => ast_unparse_precedence::TEST,
+        };
+        self.unparse_expr(expr, lvl);
         self.generate()
     }
 
@@ -286,9 +324,14 @@ impl<'a> Generator<'a> {
                     self.p("(");
                     self.unparse_parameters(parameters);
                     self.p(")");
+
+                    let lvl = match self.mode {
+                        Mode::Default => precedence::MAX,
+                        Mode::AstUnparse => ast_unparse_precedence::ATOM,
+                    };
                     if let Some(returns) = returns {
                         self.p(" -> ");
-                        self.unparse_expr(returns, precedence::MAX);
+                        self.unparse_expr(returns, lvl);
                     }
                     self.p(":");
                 });
@@ -373,7 +416,7 @@ impl<'a> Generator<'a> {
                     let mut first = true;
                     for expr in targets {
                         self.p_delim(&mut first, ", ");
-                        self.unparse_expr(expr, precedence::COMMA);
+                        self.unparse_expr(expr, self.mode.comma_precedence());
                     }
                 });
             }
@@ -424,15 +467,15 @@ impl<'a> Generator<'a> {
                 node_index: _,
             }) => {
                 statement!({
-                    let need_parens = !simple && matches!(target.as_ref(), Expr::Name(_));
+                    let need_parens = matches!(target.as_ref(), Expr::Name(_)) && !simple;
                     self.p_if(need_parens, "(");
                     self.unparse_expr(target, precedence::ANN_ASSIGN);
                     self.p_if(need_parens, ")");
                     self.p(": ");
-                    self.unparse_expr(annotation, precedence::COMMA);
+                    self.unparse_expr(annotation, self.mode.comma_precedence());
                     if let Some(value) = value {
                         self.p(" = ");
-                        self.unparse_expr(value, precedence::COMMA);
+                        self.unparse_expr(value, self.mode.comma_precedence());
                     }
                 });
             }
@@ -956,10 +999,16 @@ impl<'a> Generator<'a> {
                 range: _,
                 node_index: _,
             }) => {
-                group_if!(precedence::NAMED_EXPR, {
-                    self.unparse_expr(target, precedence::NAMED_EXPR);
+                let (lvl, rside_lvl) = match self.mode {
+                    Mode::Default => (precedence::NAMED_EXPR, precedence::NAMED_EXPR + 1),
+                    Mode::AstUnparse => {
+                        (ast_unparse_precedence::TUPLE, ast_unparse_precedence::ATOM)
+                    }
+                };
+                group_if!(lvl, {
+                    self.unparse_expr(target, lvl);
                     self.p(" := ");
-                    self.unparse_expr(value, precedence::NAMED_EXPR + 1);
+                    self.unparse_expr(value, rside_lvl);
                 });
             }
             Expr::BinOp(ast::ExprBinOp {
@@ -1020,14 +1069,18 @@ impl<'a> Generator<'a> {
                 range: _,
                 node_index: _,
             }) => {
-                group_if!(precedence::LAMBDA, {
+                let lvl = match self.mode {
+                    Mode::Default => precedence::LAMBDA,
+                    Mode::AstUnparse => ast_unparse_precedence::TEST,
+                };
+                group_if!(lvl, {
                     self.p("lambda");
                     if let Some(parameters) = parameters {
                         self.p(" ");
                         self.unparse_parameters(parameters);
                     }
                     self.p(": ");
-                    self.unparse_expr(body, precedence::LAMBDA);
+                    self.unparse_expr(body, lvl);
                 });
             }
             Expr::If(ast::ExprIf {
@@ -1037,12 +1090,16 @@ impl<'a> Generator<'a> {
                 range: _,
                 node_index: _,
             }) => {
-                group_if!(precedence::IF_EXP, {
-                    self.unparse_expr(body, precedence::IF_EXP + 1);
+                let lvl = match self.mode {
+                    Mode::Default => precedence::IF_EXP,
+                    Mode::AstUnparse => ast_unparse_precedence::TEST,
+                };
+                group_if!(lvl, {
+                    self.unparse_expr(body, lvl + 1);
                     self.p(" if ");
-                    self.unparse_expr(test, precedence::IF_EXP + 1);
+                    self.unparse_expr(test, lvl + 1);
                     self.p(" else ");
-                    self.unparse_expr(orelse, precedence::IF_EXP);
+                    self.unparse_expr(orelse, lvl);
                 });
             }
             Expr::Dict(dict) => {
@@ -1050,10 +1107,11 @@ impl<'a> Generator<'a> {
                 let mut first = true;
                 for ast::DictItem { key, value } in dict {
                     self.p_delim(&mut first, ", ");
+                    let lvl = self.mode.comma_precedence();
                     if let Some(key) = key {
-                        self.unparse_expr(key, precedence::COMMA);
+                        self.unparse_expr(key, lvl);
                         self.p(": ");
-                        self.unparse_expr(value, precedence::COMMA);
+                        self.unparse_expr(value, lvl);
                     } else {
                         self.p("**");
                         self.unparse_expr(value, precedence::MAX);
@@ -1062,6 +1120,7 @@ impl<'a> Generator<'a> {
                 self.p("}");
             }
             Expr::Set(set) => {
+                let lvl = self.mode.comma_precedence();
                 if set.is_empty() {
                     self.p("set()");
                 } else {
@@ -1069,7 +1128,7 @@ impl<'a> Generator<'a> {
                     let mut first = true;
                     for item in set {
                         self.p_delim(&mut first, ", ");
-                        self.unparse_expr(item, precedence::COMMA);
+                        self.unparse_expr(item, lvl);
                     }
                     self.p("}");
                 }
@@ -1081,7 +1140,7 @@ impl<'a> Generator<'a> {
                 node_index: _,
             }) => {
                 self.p("[");
-                self.unparse_expr(elt, precedence::COMPREHENSION_ELEMENT);
+                self.unparse_expr(elt, self.mode.comprehension_element_precedence());
                 self.unparse_comp(generators);
                 self.p("]");
             }
@@ -1092,7 +1151,7 @@ impl<'a> Generator<'a> {
                 node_index: _,
             }) => {
                 self.p("{");
-                self.unparse_expr(elt, precedence::COMPREHENSION_ELEMENT);
+                self.unparse_expr(elt, self.mode.comprehension_element_precedence());
                 self.unparse_comp(generators);
                 self.p("}");
             }
@@ -1104,9 +1163,9 @@ impl<'a> Generator<'a> {
                 node_index: _,
             }) => {
                 self.p("{");
-                self.unparse_expr(key, precedence::COMPREHENSION_ELEMENT);
+                self.unparse_expr(key, self.mode.comprehension_element_precedence());
                 self.p(": ");
-                self.unparse_expr(value, precedence::COMPREHENSION_ELEMENT);
+                self.unparse_expr(value, self.mode.comprehension_element_precedence());
                 self.unparse_comp(generators);
                 self.p("}");
             }
@@ -1118,7 +1177,7 @@ impl<'a> Generator<'a> {
                 node_index: _,
             }) => {
                 self.p("(");
-                self.unparse_expr(elt, precedence::COMPREHENSION_ELEMENT);
+                self.unparse_expr(elt, self.mode.comprehension_element_precedence());
                 self.unparse_comp(generators);
                 self.p(")");
             }
@@ -1127,7 +1186,11 @@ impl<'a> Generator<'a> {
                 range: _,
                 node_index: _,
             }) => {
-                group_if!(precedence::AWAIT, {
+                let lvl = match self.mode {
+                    Mode::Default => precedence::AWAIT,
+                    Mode::AstUnparse => ast_unparse_precedence::AWAIT,
+                };
+                group_if!(lvl, {
                     self.p("await ");
                     self.unparse_expr(value, precedence::MAX);
                 });
@@ -1162,8 +1225,12 @@ impl<'a> Generator<'a> {
                 range: _,
                 node_index: _,
             }) => {
-                group_if!(precedence::CMP, {
-                    let new_lvl = precedence::CMP + 1;
+                let lvl = match self.mode {
+                    Mode::Default => precedence::CMP,
+                    Mode::AstUnparse => ast_unparse_precedence::CMP,
+                };
+                group_if!(lvl, {
+                    let new_lvl = lvl + 1;
                     self.unparse_expr(left, new_lvl);
                     for (op, cmp) in ops.iter().zip(comparators) {
                         let op = match op {
@@ -1205,23 +1272,24 @@ impl<'a> Generator<'a> {
                 ) = (arguments.args.as_ref(), arguments.keywords.as_ref())
                 {
                     // Ensure that a single generator doesn't get double-parenthesized.
-                    self.unparse_expr(elt, precedence::COMMA);
+                    self.unparse_expr(elt, self.mode.comma_precedence());
                     self.unparse_comp(generators);
                 } else {
+                    let lvl = self.mode.comma_precedence();
                     let mut first = true;
 
                     for arg_or_keyword in arguments.arguments_source_order() {
                         match arg_or_keyword {
                             ArgOrKeyword::Arg(arg) => {
                                 self.p_delim(&mut first, ", ");
-                                self.unparse_expr(arg, precedence::COMMA);
+                                self.unparse_expr(arg, lvl);
                             }
                             ArgOrKeyword::Keyword(keyword) => {
                                 self.p_delim(&mut first, ", ");
                                 if let Some(arg) = &keyword.arg {
                                     self.p_id(arg);
                                     self.p("=");
-                                    self.unparse_expr(&keyword.value, precedence::COMMA);
+                                    self.unparse_expr(&keyword.value, lvl);
                                 } else {
                                     self.p("**");
                                     self.unparse_expr(&keyword.value, precedence::MAX);
@@ -1292,9 +1360,17 @@ impl<'a> Generator<'a> {
                     ..
                 }) = value.as_ref()
                 {
-                    self.p("(");
-                    self.unparse_expr(value, precedence::MAX);
-                    self.p(").");
+                    match self.mode {
+                        Mode::Default => {
+                            self.p("(");
+                            self.unparse_expr(value, precedence::MAX);
+                            self.p(").");
+                        }
+                        Mode::AstUnparse => {
+                            self.unparse_expr(value, precedence::MAX);
+                            self.p(" .");
+                        }
+                    };
                 } else {
                     self.unparse_expr(value, precedence::MAX);
                     self.p(".");
@@ -1303,21 +1379,30 @@ impl<'a> Generator<'a> {
             }
             Expr::Subscript(ast::ExprSubscript { value, slice, .. }) => {
                 self.unparse_expr(value, precedence::MAX);
+                let lvl = match self.mode {
+                    Mode::Default => precedence::SUBSCRIPT,
+                    Mode::AstUnparse => ast_unparse_precedence::TUPLE,
+                };
                 self.p("[");
-                self.unparse_expr(slice, precedence::SUBSCRIPT);
+                self.unparse_expr(slice, lvl);
                 self.p("]");
             }
             Expr::Starred(ast::ExprStarred { value, .. }) => {
                 self.p("*");
-                self.unparse_expr(value, precedence::MAX);
+                let lvl = match self.mode {
+                    Mode::Default => precedence::MAX,
+                    Mode::AstUnparse => ast_unparse_precedence::EXPR,
+                };
+                self.unparse_expr(value, lvl);
             }
             Expr::Name(ast::ExprName { id, .. }) => self.p(id.as_str()),
             Expr::List(list) => {
                 self.p("[");
+                let lvl = self.mode.comma_precedence();
                 let mut first = true;
                 for item in list {
                     self.p_delim(&mut first, ", ");
-                    self.unparse_expr(item, precedence::COMMA);
+                    self.unparse_expr(item, lvl);
                 }
                 self.p("]");
             }
@@ -1327,13 +1412,15 @@ impl<'a> Generator<'a> {
                 } else {
                     let lvl = match self.mode {
                         Mode::Default => precedence::TUPLE,
-                        Mode::AstUnparse => precedence::COMPREHENSION_TARGET - 1,
+                        Mode::AstUnparse => ast_unparse_precedence::TUPLE,
                     };
+                    let item_lvl = self.mode.comma_precedence();
+
                     group_if!(lvl, {
                         let mut first = true;
                         for item in tuple {
                             self.p_delim(&mut first, ", ");
-                            self.unparse_expr(item, precedence::COMMA);
+                            self.unparse_expr(item, item_lvl);
                         }
                         self.p_if(tuple.len() == 1, ",");
                     });
@@ -1346,16 +1433,21 @@ impl<'a> Generator<'a> {
                 range: _,
                 node_index: _,
             }) => {
+                let lvl = match self.mode {
+                    Mode::Default => precedence::SLICE,
+                    Mode::AstUnparse => ast_unparse_precedence::TEST,
+                };
+
                 if let Some(lower) = lower {
-                    self.unparse_expr(lower, precedence::SLICE);
+                    self.unparse_expr(lower, lvl);
                 }
                 self.p(":");
                 if let Some(upper) = upper {
-                    self.unparse_expr(upper, precedence::SLICE);
+                    self.unparse_expr(upper, lvl);
                 }
                 if let Some(step) = step {
                     self.p(":");
-                    self.unparse_expr(step, precedence::SLICE);
+                    self.unparse_expr(step, lvl);
                 }
             }
             Expr::IpyEscapeCommand(ast::ExprIpyEscapeCommand { kind, value, .. }) => {
@@ -1404,17 +1496,20 @@ impl<'a> Generator<'a> {
 
     fn unparse_parameter(&mut self, parameter: &Parameter) {
         self.p_id(&parameter.name);
+
+        let lvl = self.mode.comma_precedence();
         if let Some(ann) = &parameter.annotation {
             self.p(": ");
-            self.unparse_expr(ann, precedence::COMMA);
+            self.unparse_expr(ann, lvl);
         }
     }
 
     fn unparse_parameter_with_default(&mut self, parameter_with_default: &ParameterWithDefault) {
         self.unparse_parameter(&parameter_with_default.parameter);
+        let lvl = self.mode.comma_precedence();
         if let Some(default) = &parameter_with_default.default {
             self.p("=");
-            self.unparse_expr(default, precedence::COMMA);
+            self.unparse_expr(default, lvl);
         }
     }
 
@@ -1425,12 +1520,24 @@ impl<'a> Generator<'a> {
             } else {
                 " for "
             });
-            self.unparse_expr(&comp.target, precedence::COMPREHENSION_TARGET);
+
+            let lvl = match self.mode {
+                Mode::Default => precedence::COMPREHENSION_TARGET,
+                Mode::AstUnparse => ast_unparse_precedence::TUPLE,
+            };
+
+            self.unparse_expr(&comp.target, lvl);
             self.p(" in ");
-            self.unparse_expr(&comp.iter, precedence::COMPREHENSION);
+
+            let iter_lvl = match self.mode {
+                Mode::Default => precedence::COMPREHENSION,
+                Mode::AstUnparse => ast_unparse_precedence::TEST + 1,
+            };
+
+            self.unparse_expr(&comp.iter, iter_lvl);
             for cond in &comp.ifs {
                 self.p(" if ");
-                self.unparse_expr(cond, precedence::COMPREHENSION);
+                self.unparse_expr(cond, iter_lvl);
             }
         }
     }
@@ -2122,8 +2229,13 @@ if True:
     #[test_case::test_case("x = a,", "x = (a,)" ; "basic assign single tuple parentheses")]
     #[test_case::test_case("x = a, b", "x = (a, b)" ; "basic assign multi element tuple parentheses")]
     #[test_case::test_case("a, (b, c)", "(a, (b, c))" ; "nested tuple parentheses")]
-    #[test_case::test_case("def f(x: (a,)) -> (b, c):\n    pass", "def f(x: (a,)) -> (b, c):\n    pass" ; "type ann tuple parentheses")]
+    #[test_case::test_case(
+        "def f(x: (a,)) -> (b, c):\n    ...",
+        "def f(x: (a,)) -> (b, c):\n    ..." ;
+        "type ann tuple parentheses"
+    )]
     #[test_case::test_case("[(x,) for x, in (a,)]", "[(x,) for x, in (a,)]" ; "list comprehension tuple parentheses")]
+    #[test_case::test_case("(1).real", "1 .real" ; "attr paren space")]
     fn ast_unparse_mode(input: &str, expected: &str) {
         let result = round_trip_with(
             &Indentation::default(),
