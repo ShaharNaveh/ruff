@@ -18,7 +18,7 @@ use ruff_source_file::LineEnding;
 use super::stylist::{Indentation, Stylist};
 
 mod precedence {
-    // pub(crate) const MIN: u8 = 0;
+    pub(crate) const MIN: u8 = 0;
     pub(crate) const NAMED_EXPR: u8 = 1;
     pub(crate) const ASSIGN: u8 = 3;
     pub(crate) const ANN_ASSIGN: u8 = 5;
@@ -145,7 +145,7 @@ impl<'a> Generator<'a> {
 
     /// Generate source code from an [`Expr`].
     pub fn expr(mut self, expr: &Expr) -> String {
-        self.unparse_expr(expr, 0);
+        self.unparse_expr(expr, precedence::MIN);
         self.generate()
     }
 
@@ -1325,7 +1325,11 @@ impl<'a> Generator<'a> {
                 if tuple.is_empty() {
                     self.p("()");
                 } else {
-                    group_if!(precedence::TUPLE, {
+                    let lvl = match self.mode {
+                        Mode::Default => precedence::TUPLE,
+                        Mode::AstUnparse => precedence::COMPREHENSION_TARGET - 1,
+                    };
+                    group_if!(lvl, {
                         let mut first = true;
                         for item in tuple {
                             self.p_delim(&mut first, ", ");
