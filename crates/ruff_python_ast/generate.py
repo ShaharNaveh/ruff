@@ -393,7 +393,7 @@ def write_owned_enum(out: list[str], ast: Ast) -> None:
                     }}
 
                     #[inline]
-                    pub fn as_{is_name}_mut(&mut self) -> Option<&mut {node.ty}> {{
+                    pub const fn as_{is_name}_mut(&mut self) -> Option<&mut {node.ty}> {{
                         match self {{
                             {match_arm}(val) => Some(val),
                             _ => None,
@@ -401,7 +401,7 @@ def write_owned_enum(out: list[str], ast: Ast) -> None:
                     }}
 
                     #[inline]
-                    pub fn as_{is_name}(&self) -> Option<&{node.ty}> {{
+                    pub const fn as_{is_name}(&self) -> Option<&{node.ty}> {{
                         match self {{
                             {match_arm}(val) => Some(val),
                             _ => None,
@@ -430,14 +430,14 @@ def write_owned_enum(out: list[str], ast: Ast) -> None:
                     }}
 
                     #[inline]
-                    pub fn as_{is_name}_mut(&mut self) -> Option<&mut {node.ty}> {{
+                    pub const fn as_{is_name}_mut(&mut self) -> Option<&mut {node.ty}> {{
                         match self {{
                             {match_arm}(val) => Some(val),
                         }}
                     }}
 
                     #[inline]
-                    pub fn as_{is_name}(&self) -> Option<&{node.ty}> {{
+                    pub const fn as_{is_name}(&self) -> Option<&{node.ty}> {{
                         match self {{
                             {match_arm}(val) => Some(val),
                         }}

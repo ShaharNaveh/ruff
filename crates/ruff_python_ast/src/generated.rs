@@ -66,7 +66,7 @@ impl Mod {
     }
 
     #[inline]
-    pub fn as_module_mut(&mut self) -> Option<&mut crate::ModModule> {
+    pub const fn as_module_mut(&mut self) -> Option<&mut crate::ModModule> {
         match self {
             Self::Module(val) => Some(val),
             _ => None,
@@ -74,7 +74,7 @@ impl Mod {
     }
 
     #[inline]
-    pub fn as_module(&self) -> Option<&crate::ModModule> {
+    pub const fn as_module(&self) -> Option<&crate::ModModule> {
         match self {
             Self::Module(val) => Some(val),
             _ => None,
@@ -103,7 +103,7 @@ impl Mod {
     }
 
     #[inline]
-    pub fn as_expression_mut(&mut self) -> Option<&mut crate::ModExpression> {
+    pub const fn as_expression_mut(&mut self) -> Option<&mut crate::ModExpression> {
         match self {
             Self::Expression(val) => Some(val),
             _ => None,
@@ -111,7 +111,7 @@ impl Mod {
     }
 
     #[inline]
-    pub fn as_expression(&self) -> Option<&crate::ModExpression> {
+    pub const fn as_expression(&self) -> Option<&crate::ModExpression> {
         match self {
             Self::Expression(val) => Some(val),
             _ => None,
@@ -388,7 +388,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_function_def_stmt_mut(&mut self) -> Option<&mut crate::StmtFunctionDef> {
+    pub const fn as_function_def_stmt_mut(&mut self) -> Option<&mut crate::StmtFunctionDef> {
         match self {
             Self::FunctionDef(val) => Some(val),
             _ => None,
@@ -396,7 +396,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_function_def_stmt(&self) -> Option<&crate::StmtFunctionDef> {
+    pub const fn as_function_def_stmt(&self) -> Option<&crate::StmtFunctionDef> {
         match self {
             Self::FunctionDef(val) => Some(val),
             _ => None,
@@ -425,7 +425,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_class_def_stmt_mut(&mut self) -> Option<&mut crate::StmtClassDef> {
+    pub const fn as_class_def_stmt_mut(&mut self) -> Option<&mut crate::StmtClassDef> {
         match self {
             Self::ClassDef(val) => Some(val),
             _ => None,
@@ -433,7 +433,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_class_def_stmt(&self) -> Option<&crate::StmtClassDef> {
+    pub const fn as_class_def_stmt(&self) -> Option<&crate::StmtClassDef> {
         match self {
             Self::ClassDef(val) => Some(val),
             _ => None,
@@ -462,7 +462,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_return_stmt_mut(&mut self) -> Option<&mut crate::StmtReturn> {
+    pub const fn as_return_stmt_mut(&mut self) -> Option<&mut crate::StmtReturn> {
         match self {
             Self::Return(val) => Some(val),
             _ => None,
@@ -470,7 +470,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_return_stmt(&self) -> Option<&crate::StmtReturn> {
+    pub const fn as_return_stmt(&self) -> Option<&crate::StmtReturn> {
         match self {
             Self::Return(val) => Some(val),
             _ => None,
@@ -499,7 +499,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_delete_stmt_mut(&mut self) -> Option<&mut crate::StmtDelete> {
+    pub const fn as_delete_stmt_mut(&mut self) -> Option<&mut crate::StmtDelete> {
         match self {
             Self::Delete(val) => Some(val),
             _ => None,
@@ -507,7 +507,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_delete_stmt(&self) -> Option<&crate::StmtDelete> {
+    pub const fn as_delete_stmt(&self) -> Option<&crate::StmtDelete> {
         match self {
             Self::Delete(val) => Some(val),
             _ => None,
@@ -536,7 +536,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_type_alias_stmt_mut(&mut self) -> Option<&mut crate::StmtTypeAlias> {
+    pub const fn as_type_alias_stmt_mut(&mut self) -> Option<&mut crate::StmtTypeAlias> {
         match self {
             Self::TypeAlias(val) => Some(val),
             _ => None,
@@ -544,7 +544,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_type_alias_stmt(&self) -> Option<&crate::StmtTypeAlias> {
+    pub const fn as_type_alias_stmt(&self) -> Option<&crate::StmtTypeAlias> {
         match self {
             Self::TypeAlias(val) => Some(val),
             _ => None,
@@ -573,7 +573,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_assign_stmt_mut(&mut self) -> Option<&mut crate::StmtAssign> {
+    pub const fn as_assign_stmt_mut(&mut self) -> Option<&mut crate::StmtAssign> {
         match self {
             Self::Assign(val) => Some(val),
             _ => None,
@@ -581,7 +581,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_assign_stmt(&self) -> Option<&crate::StmtAssign> {
+    pub const fn as_assign_stmt(&self) -> Option<&crate::StmtAssign> {
         match self {
             Self::Assign(val) => Some(val),
             _ => None,
@@ -610,7 +610,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_aug_assign_stmt_mut(&mut self) -> Option<&mut crate::StmtAugAssign> {
+    pub const fn as_aug_assign_stmt_mut(&mut self) -> Option<&mut crate::StmtAugAssign> {
         match self {
             Self::AugAssign(val) => Some(val),
             _ => None,
@@ -618,7 +618,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_aug_assign_stmt(&self) -> Option<&crate::StmtAugAssign> {
+    pub const fn as_aug_assign_stmt(&self) -> Option<&crate::StmtAugAssign> {
         match self {
             Self::AugAssign(val) => Some(val),
             _ => None,
@@ -647,7 +647,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_ann_assign_stmt_mut(&mut self) -> Option<&mut crate::StmtAnnAssign> {
+    pub const fn as_ann_assign_stmt_mut(&mut self) -> Option<&mut crate::StmtAnnAssign> {
         match self {
             Self::AnnAssign(val) => Some(val),
             _ => None,
@@ -655,7 +655,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_ann_assign_stmt(&self) -> Option<&crate::StmtAnnAssign> {
+    pub const fn as_ann_assign_stmt(&self) -> Option<&crate::StmtAnnAssign> {
         match self {
             Self::AnnAssign(val) => Some(val),
             _ => None,
@@ -684,7 +684,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_for_stmt_mut(&mut self) -> Option<&mut crate::StmtFor> {
+    pub const fn as_for_stmt_mut(&mut self) -> Option<&mut crate::StmtFor> {
         match self {
             Self::For(val) => Some(val),
             _ => None,
@@ -692,7 +692,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_for_stmt(&self) -> Option<&crate::StmtFor> {
+    pub const fn as_for_stmt(&self) -> Option<&crate::StmtFor> {
         match self {
             Self::For(val) => Some(val),
             _ => None,
@@ -721,7 +721,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_while_stmt_mut(&mut self) -> Option<&mut crate::StmtWhile> {
+    pub const fn as_while_stmt_mut(&mut self) -> Option<&mut crate::StmtWhile> {
         match self {
             Self::While(val) => Some(val),
             _ => None,
@@ -729,7 +729,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_while_stmt(&self) -> Option<&crate::StmtWhile> {
+    pub const fn as_while_stmt(&self) -> Option<&crate::StmtWhile> {
         match self {
             Self::While(val) => Some(val),
             _ => None,
@@ -758,7 +758,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_if_stmt_mut(&mut self) -> Option<&mut crate::StmtIf> {
+    pub const fn as_if_stmt_mut(&mut self) -> Option<&mut crate::StmtIf> {
         match self {
             Self::If(val) => Some(val),
             _ => None,
@@ -766,7 +766,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_if_stmt(&self) -> Option<&crate::StmtIf> {
+    pub const fn as_if_stmt(&self) -> Option<&crate::StmtIf> {
         match self {
             Self::If(val) => Some(val),
             _ => None,
@@ -795,7 +795,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_with_stmt_mut(&mut self) -> Option<&mut crate::StmtWith> {
+    pub const fn as_with_stmt_mut(&mut self) -> Option<&mut crate::StmtWith> {
         match self {
             Self::With(val) => Some(val),
             _ => None,
@@ -803,7 +803,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_with_stmt(&self) -> Option<&crate::StmtWith> {
+    pub const fn as_with_stmt(&self) -> Option<&crate::StmtWith> {
         match self {
             Self::With(val) => Some(val),
             _ => None,
@@ -832,7 +832,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_match_stmt_mut(&mut self) -> Option<&mut crate::StmtMatch> {
+    pub const fn as_match_stmt_mut(&mut self) -> Option<&mut crate::StmtMatch> {
         match self {
             Self::Match(val) => Some(val),
             _ => None,
@@ -840,7 +840,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_match_stmt(&self) -> Option<&crate::StmtMatch> {
+    pub const fn as_match_stmt(&self) -> Option<&crate::StmtMatch> {
         match self {
             Self::Match(val) => Some(val),
             _ => None,
@@ -869,7 +869,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_raise_stmt_mut(&mut self) -> Option<&mut crate::StmtRaise> {
+    pub const fn as_raise_stmt_mut(&mut self) -> Option<&mut crate::StmtRaise> {
         match self {
             Self::Raise(val) => Some(val),
             _ => None,
@@ -877,7 +877,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_raise_stmt(&self) -> Option<&crate::StmtRaise> {
+    pub const fn as_raise_stmt(&self) -> Option<&crate::StmtRaise> {
         match self {
             Self::Raise(val) => Some(val),
             _ => None,
@@ -906,7 +906,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_try_stmt_mut(&mut self) -> Option<&mut crate::StmtTry> {
+    pub const fn as_try_stmt_mut(&mut self) -> Option<&mut crate::StmtTry> {
         match self {
             Self::Try(val) => Some(val),
             _ => None,
@@ -914,7 +914,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_try_stmt(&self) -> Option<&crate::StmtTry> {
+    pub const fn as_try_stmt(&self) -> Option<&crate::StmtTry> {
         match self {
             Self::Try(val) => Some(val),
             _ => None,
@@ -943,7 +943,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_assert_stmt_mut(&mut self) -> Option<&mut crate::StmtAssert> {
+    pub const fn as_assert_stmt_mut(&mut self) -> Option<&mut crate::StmtAssert> {
         match self {
             Self::Assert(val) => Some(val),
             _ => None,
@@ -951,7 +951,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_assert_stmt(&self) -> Option<&crate::StmtAssert> {
+    pub const fn as_assert_stmt(&self) -> Option<&crate::StmtAssert> {
         match self {
             Self::Assert(val) => Some(val),
             _ => None,
@@ -980,7 +980,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_import_stmt_mut(&mut self) -> Option<&mut crate::StmtImport> {
+    pub const fn as_import_stmt_mut(&mut self) -> Option<&mut crate::StmtImport> {
         match self {
             Self::Import(val) => Some(val),
             _ => None,
@@ -988,7 +988,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_import_stmt(&self) -> Option<&crate::StmtImport> {
+    pub const fn as_import_stmt(&self) -> Option<&crate::StmtImport> {
         match self {
             Self::Import(val) => Some(val),
             _ => None,
@@ -1017,7 +1017,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_import_from_stmt_mut(&mut self) -> Option<&mut crate::StmtImportFrom> {
+    pub const fn as_import_from_stmt_mut(&mut self) -> Option<&mut crate::StmtImportFrom> {
         match self {
             Self::ImportFrom(val) => Some(val),
             _ => None,
@@ -1025,7 +1025,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_import_from_stmt(&self) -> Option<&crate::StmtImportFrom> {
+    pub const fn as_import_from_stmt(&self) -> Option<&crate::StmtImportFrom> {
         match self {
             Self::ImportFrom(val) => Some(val),
             _ => None,
@@ -1054,7 +1054,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_global_stmt_mut(&mut self) -> Option<&mut crate::StmtGlobal> {
+    pub const fn as_global_stmt_mut(&mut self) -> Option<&mut crate::StmtGlobal> {
         match self {
             Self::Global(val) => Some(val),
             _ => None,
@@ -1062,7 +1062,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_global_stmt(&self) -> Option<&crate::StmtGlobal> {
+    pub const fn as_global_stmt(&self) -> Option<&crate::StmtGlobal> {
         match self {
             Self::Global(val) => Some(val),
             _ => None,
@@ -1091,7 +1091,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_nonlocal_stmt_mut(&mut self) -> Option<&mut crate::StmtNonlocal> {
+    pub const fn as_nonlocal_stmt_mut(&mut self) -> Option<&mut crate::StmtNonlocal> {
         match self {
             Self::Nonlocal(val) => Some(val),
             _ => None,
@@ -1099,7 +1099,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_nonlocal_stmt(&self) -> Option<&crate::StmtNonlocal> {
+    pub const fn as_nonlocal_stmt(&self) -> Option<&crate::StmtNonlocal> {
         match self {
             Self::Nonlocal(val) => Some(val),
             _ => None,
@@ -1128,7 +1128,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_expr_stmt_mut(&mut self) -> Option<&mut crate::StmtExpr> {
+    pub const fn as_expr_stmt_mut(&mut self) -> Option<&mut crate::StmtExpr> {
         match self {
             Self::Expr(val) => Some(val),
             _ => None,
@@ -1136,7 +1136,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_expr_stmt(&self) -> Option<&crate::StmtExpr> {
+    pub const fn as_expr_stmt(&self) -> Option<&crate::StmtExpr> {
         match self {
             Self::Expr(val) => Some(val),
             _ => None,
@@ -1165,7 +1165,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_pass_stmt_mut(&mut self) -> Option<&mut crate::StmtPass> {
+    pub const fn as_pass_stmt_mut(&mut self) -> Option<&mut crate::StmtPass> {
         match self {
             Self::Pass(val) => Some(val),
             _ => None,
@@ -1173,7 +1173,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_pass_stmt(&self) -> Option<&crate::StmtPass> {
+    pub const fn as_pass_stmt(&self) -> Option<&crate::StmtPass> {
         match self {
             Self::Pass(val) => Some(val),
             _ => None,
@@ -1202,7 +1202,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_break_stmt_mut(&mut self) -> Option<&mut crate::StmtBreak> {
+    pub const fn as_break_stmt_mut(&mut self) -> Option<&mut crate::StmtBreak> {
         match self {
             Self::Break(val) => Some(val),
             _ => None,
@@ -1210,7 +1210,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_break_stmt(&self) -> Option<&crate::StmtBreak> {
+    pub const fn as_break_stmt(&self) -> Option<&crate::StmtBreak> {
         match self {
             Self::Break(val) => Some(val),
             _ => None,
@@ -1239,7 +1239,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_continue_stmt_mut(&mut self) -> Option<&mut crate::StmtContinue> {
+    pub const fn as_continue_stmt_mut(&mut self) -> Option<&mut crate::StmtContinue> {
         match self {
             Self::Continue(val) => Some(val),
             _ => None,
@@ -1247,7 +1247,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_continue_stmt(&self) -> Option<&crate::StmtContinue> {
+    pub const fn as_continue_stmt(&self) -> Option<&crate::StmtContinue> {
         match self {
             Self::Continue(val) => Some(val),
             _ => None,
@@ -1276,7 +1276,9 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_ipy_escape_command_stmt_mut(&mut self) -> Option<&mut crate::StmtIpyEscapeCommand> {
+    pub const fn as_ipy_escape_command_stmt_mut(
+        &mut self,
+    ) -> Option<&mut crate::StmtIpyEscapeCommand> {
         match self {
             Self::IpyEscapeCommand(val) => Some(val),
             _ => None,
@@ -1284,7 +1286,7 @@ impl Stmt {
     }
 
     #[inline]
-    pub fn as_ipy_escape_command_stmt(&self) -> Option<&crate::StmtIpyEscapeCommand> {
+    pub const fn as_ipy_escape_command_stmt(&self) -> Option<&crate::StmtIpyEscapeCommand> {
         match self {
             Self::IpyEscapeCommand(val) => Some(val),
             _ => None,
@@ -1633,7 +1635,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_bool_op_expr_mut(&mut self) -> Option<&mut crate::ExprBoolOp> {
+    pub const fn as_bool_op_expr_mut(&mut self) -> Option<&mut crate::ExprBoolOp> {
         match self {
             Self::BoolOp(val) => Some(val),
             _ => None,
@@ -1641,7 +1643,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_bool_op_expr(&self) -> Option<&crate::ExprBoolOp> {
+    pub const fn as_bool_op_expr(&self) -> Option<&crate::ExprBoolOp> {
         match self {
             Self::BoolOp(val) => Some(val),
             _ => None,
@@ -1670,7 +1672,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_named_expr_mut(&mut self) -> Option<&mut crate::ExprNamed> {
+    pub const fn as_named_expr_mut(&mut self) -> Option<&mut crate::ExprNamed> {
         match self {
             Self::Named(val) => Some(val),
             _ => None,
@@ -1678,7 +1680,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_named_expr(&self) -> Option<&crate::ExprNamed> {
+    pub const fn as_named_expr(&self) -> Option<&crate::ExprNamed> {
         match self {
             Self::Named(val) => Some(val),
             _ => None,
@@ -1707,7 +1709,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_bin_op_expr_mut(&mut self) -> Option<&mut crate::ExprBinOp> {
+    pub const fn as_bin_op_expr_mut(&mut self) -> Option<&mut crate::ExprBinOp> {
         match self {
             Self::BinOp(val) => Some(val),
             _ => None,
@@ -1715,7 +1717,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_bin_op_expr(&self) -> Option<&crate::ExprBinOp> {
+    pub const fn as_bin_op_expr(&self) -> Option<&crate::ExprBinOp> {
         match self {
             Self::BinOp(val) => Some(val),
             _ => None,
@@ -1744,7 +1746,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_unary_op_expr_mut(&mut self) -> Option<&mut crate::ExprUnaryOp> {
+    pub const fn as_unary_op_expr_mut(&mut self) -> Option<&mut crate::ExprUnaryOp> {
         match self {
             Self::UnaryOp(val) => Some(val),
             _ => None,
@@ -1752,7 +1754,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_unary_op_expr(&self) -> Option<&crate::ExprUnaryOp> {
+    pub const fn as_unary_op_expr(&self) -> Option<&crate::ExprUnaryOp> {
         match self {
             Self::UnaryOp(val) => Some(val),
             _ => None,
@@ -1781,7 +1783,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_lambda_expr_mut(&mut self) -> Option<&mut crate::ExprLambda> {
+    pub const fn as_lambda_expr_mut(&mut self) -> Option<&mut crate::ExprLambda> {
         match self {
             Self::Lambda(val) => Some(val),
             _ => None,
@@ -1789,7 +1791,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_lambda_expr(&self) -> Option<&crate::ExprLambda> {
+    pub const fn as_lambda_expr(&self) -> Option<&crate::ExprLambda> {
         match self {
             Self::Lambda(val) => Some(val),
             _ => None,
@@ -1818,7 +1820,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_if_expr_mut(&mut self) -> Option<&mut crate::ExprIf> {
+    pub const fn as_if_expr_mut(&mut self) -> Option<&mut crate::ExprIf> {
         match self {
             Self::If(val) => Some(val),
             _ => None,
@@ -1826,7 +1828,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_if_expr(&self) -> Option<&crate::ExprIf> {
+    pub const fn as_if_expr(&self) -> Option<&crate::ExprIf> {
         match self {
             Self::If(val) => Some(val),
             _ => None,
@@ -1855,7 +1857,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_dict_expr_mut(&mut self) -> Option<&mut crate::ExprDict> {
+    pub const fn as_dict_expr_mut(&mut self) -> Option<&mut crate::ExprDict> {
         match self {
             Self::Dict(val) => Some(val),
             _ => None,
@@ -1863,7 +1865,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_dict_expr(&self) -> Option<&crate::ExprDict> {
+    pub const fn as_dict_expr(&self) -> Option<&crate::ExprDict> {
         match self {
             Self::Dict(val) => Some(val),
             _ => None,
@@ -1892,7 +1894,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_set_expr_mut(&mut self) -> Option<&mut crate::ExprSet> {
+    pub const fn as_set_expr_mut(&mut self) -> Option<&mut crate::ExprSet> {
         match self {
             Self::Set(val) => Some(val),
             _ => None,
@@ -1900,7 +1902,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_set_expr(&self) -> Option<&crate::ExprSet> {
+    pub const fn as_set_expr(&self) -> Option<&crate::ExprSet> {
         match self {
             Self::Set(val) => Some(val),
             _ => None,
@@ -1929,7 +1931,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_list_comp_expr_mut(&mut self) -> Option<&mut crate::ExprListComp> {
+    pub const fn as_list_comp_expr_mut(&mut self) -> Option<&mut crate::ExprListComp> {
         match self {
             Self::ListComp(val) => Some(val),
             _ => None,
@@ -1937,7 +1939,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_list_comp_expr(&self) -> Option<&crate::ExprListComp> {
+    pub const fn as_list_comp_expr(&self) -> Option<&crate::ExprListComp> {
         match self {
             Self::ListComp(val) => Some(val),
             _ => None,
@@ -1966,7 +1968,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_set_comp_expr_mut(&mut self) -> Option<&mut crate::ExprSetComp> {
+    pub const fn as_set_comp_expr_mut(&mut self) -> Option<&mut crate::ExprSetComp> {
         match self {
             Self::SetComp(val) => Some(val),
             _ => None,
@@ -1974,7 +1976,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_set_comp_expr(&self) -> Option<&crate::ExprSetComp> {
+    pub const fn as_set_comp_expr(&self) -> Option<&crate::ExprSetComp> {
         match self {
             Self::SetComp(val) => Some(val),
             _ => None,
@@ -2003,7 +2005,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_dict_comp_expr_mut(&mut self) -> Option<&mut crate::ExprDictComp> {
+    pub const fn as_dict_comp_expr_mut(&mut self) -> Option<&mut crate::ExprDictComp> {
         match self {
             Self::DictComp(val) => Some(val),
             _ => None,
@@ -2011,7 +2013,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_dict_comp_expr(&self) -> Option<&crate::ExprDictComp> {
+    pub const fn as_dict_comp_expr(&self) -> Option<&crate::ExprDictComp> {
         match self {
             Self::DictComp(val) => Some(val),
             _ => None,
@@ -2040,7 +2042,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_generator_expr_mut(&mut self) -> Option<&mut crate::ExprGenerator> {
+    pub const fn as_generator_expr_mut(&mut self) -> Option<&mut crate::ExprGenerator> {
         match self {
             Self::Generator(val) => Some(val),
             _ => None,
@@ -2048,7 +2050,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_generator_expr(&self) -> Option<&crate::ExprGenerator> {
+    pub const fn as_generator_expr(&self) -> Option<&crate::ExprGenerator> {
         match self {
             Self::Generator(val) => Some(val),
             _ => None,
@@ -2077,7 +2079,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_await_expr_mut(&mut self) -> Option<&mut crate::ExprAwait> {
+    pub const fn as_await_expr_mut(&mut self) -> Option<&mut crate::ExprAwait> {
         match self {
             Self::Await(val) => Some(val),
             _ => None,
@@ -2085,7 +2087,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_await_expr(&self) -> Option<&crate::ExprAwait> {
+    pub const fn as_await_expr(&self) -> Option<&crate::ExprAwait> {
         match self {
             Self::Await(val) => Some(val),
             _ => None,
@@ -2114,7 +2116,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_yield_expr_mut(&mut self) -> Option<&mut crate::ExprYield> {
+    pub const fn as_yield_expr_mut(&mut self) -> Option<&mut crate::ExprYield> {
         match self {
             Self::Yield(val) => Some(val),
             _ => None,
@@ -2122,7 +2124,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_yield_expr(&self) -> Option<&crate::ExprYield> {
+    pub const fn as_yield_expr(&self) -> Option<&crate::ExprYield> {
         match self {
             Self::Yield(val) => Some(val),
             _ => None,
@@ -2151,7 +2153,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_yield_from_expr_mut(&mut self) -> Option<&mut crate::ExprYieldFrom> {
+    pub const fn as_yield_from_expr_mut(&mut self) -> Option<&mut crate::ExprYieldFrom> {
         match self {
             Self::YieldFrom(val) => Some(val),
             _ => None,
@@ -2159,7 +2161,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_yield_from_expr(&self) -> Option<&crate::ExprYieldFrom> {
+    pub const fn as_yield_from_expr(&self) -> Option<&crate::ExprYieldFrom> {
         match self {
             Self::YieldFrom(val) => Some(val),
             _ => None,
@@ -2188,7 +2190,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_compare_expr_mut(&mut self) -> Option<&mut crate::ExprCompare> {
+    pub const fn as_compare_expr_mut(&mut self) -> Option<&mut crate::ExprCompare> {
         match self {
             Self::Compare(val) => Some(val),
             _ => None,
@@ -2196,7 +2198,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_compare_expr(&self) -> Option<&crate::ExprCompare> {
+    pub const fn as_compare_expr(&self) -> Option<&crate::ExprCompare> {
         match self {
             Self::Compare(val) => Some(val),
             _ => None,
@@ -2225,7 +2227,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_call_expr_mut(&mut self) -> Option<&mut crate::ExprCall> {
+    pub const fn as_call_expr_mut(&mut self) -> Option<&mut crate::ExprCall> {
         match self {
             Self::Call(val) => Some(val),
             _ => None,
@@ -2233,7 +2235,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_call_expr(&self) -> Option<&crate::ExprCall> {
+    pub const fn as_call_expr(&self) -> Option<&crate::ExprCall> {
         match self {
             Self::Call(val) => Some(val),
             _ => None,
@@ -2262,7 +2264,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_f_string_expr_mut(&mut self) -> Option<&mut crate::ExprFString> {
+    pub const fn as_f_string_expr_mut(&mut self) -> Option<&mut crate::ExprFString> {
         match self {
             Self::FString(val) => Some(val),
             _ => None,
@@ -2270,7 +2272,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_f_string_expr(&self) -> Option<&crate::ExprFString> {
+    pub const fn as_f_string_expr(&self) -> Option<&crate::ExprFString> {
         match self {
             Self::FString(val) => Some(val),
             _ => None,
@@ -2299,7 +2301,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_t_string_expr_mut(&mut self) -> Option<&mut crate::ExprTString> {
+    pub const fn as_t_string_expr_mut(&mut self) -> Option<&mut crate::ExprTString> {
         match self {
             Self::TString(val) => Some(val),
             _ => None,
@@ -2307,7 +2309,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_t_string_expr(&self) -> Option<&crate::ExprTString> {
+    pub const fn as_t_string_expr(&self) -> Option<&crate::ExprTString> {
         match self {
             Self::TString(val) => Some(val),
             _ => None,
@@ -2336,7 +2338,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_string_literal_expr_mut(&mut self) -> Option<&mut crate::ExprStringLiteral> {
+    pub const fn as_string_literal_expr_mut(&mut self) -> Option<&mut crate::ExprStringLiteral> {
         match self {
             Self::StringLiteral(val) => Some(val),
             _ => None,
@@ -2344,7 +2346,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_string_literal_expr(&self) -> Option<&crate::ExprStringLiteral> {
+    pub const fn as_string_literal_expr(&self) -> Option<&crate::ExprStringLiteral> {
         match self {
             Self::StringLiteral(val) => Some(val),
             _ => None,
@@ -2373,7 +2375,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_bytes_literal_expr_mut(&mut self) -> Option<&mut crate::ExprBytesLiteral> {
+    pub const fn as_bytes_literal_expr_mut(&mut self) -> Option<&mut crate::ExprBytesLiteral> {
         match self {
             Self::BytesLiteral(val) => Some(val),
             _ => None,
@@ -2381,7 +2383,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_bytes_literal_expr(&self) -> Option<&crate::ExprBytesLiteral> {
+    pub const fn as_bytes_literal_expr(&self) -> Option<&crate::ExprBytesLiteral> {
         match self {
             Self::BytesLiteral(val) => Some(val),
             _ => None,
@@ -2410,7 +2412,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_number_literal_expr_mut(&mut self) -> Option<&mut crate::ExprNumberLiteral> {
+    pub const fn as_number_literal_expr_mut(&mut self) -> Option<&mut crate::ExprNumberLiteral> {
         match self {
             Self::NumberLiteral(val) => Some(val),
             _ => None,
@@ -2418,7 +2420,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_number_literal_expr(&self) -> Option<&crate::ExprNumberLiteral> {
+    pub const fn as_number_literal_expr(&self) -> Option<&crate::ExprNumberLiteral> {
         match self {
             Self::NumberLiteral(val) => Some(val),
             _ => None,
@@ -2447,7 +2449,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_boolean_literal_expr_mut(&mut self) -> Option<&mut crate::ExprBooleanLiteral> {
+    pub const fn as_boolean_literal_expr_mut(&mut self) -> Option<&mut crate::ExprBooleanLiteral> {
         match self {
             Self::BooleanLiteral(val) => Some(val),
             _ => None,
@@ -2455,7 +2457,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_boolean_literal_expr(&self) -> Option<&crate::ExprBooleanLiteral> {
+    pub const fn as_boolean_literal_expr(&self) -> Option<&crate::ExprBooleanLiteral> {
         match self {
             Self::BooleanLiteral(val) => Some(val),
             _ => None,
@@ -2484,7 +2486,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_none_literal_expr_mut(&mut self) -> Option<&mut crate::ExprNoneLiteral> {
+    pub const fn as_none_literal_expr_mut(&mut self) -> Option<&mut crate::ExprNoneLiteral> {
         match self {
             Self::NoneLiteral(val) => Some(val),
             _ => None,
@@ -2492,7 +2494,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_none_literal_expr(&self) -> Option<&crate::ExprNoneLiteral> {
+    pub const fn as_none_literal_expr(&self) -> Option<&crate::ExprNoneLiteral> {
         match self {
             Self::NoneLiteral(val) => Some(val),
             _ => None,
@@ -2521,7 +2523,9 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_ellipsis_literal_expr_mut(&mut self) -> Option<&mut crate::ExprEllipsisLiteral> {
+    pub const fn as_ellipsis_literal_expr_mut(
+        &mut self,
+    ) -> Option<&mut crate::ExprEllipsisLiteral> {
         match self {
             Self::EllipsisLiteral(val) => Some(val),
             _ => None,
@@ -2529,7 +2533,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_ellipsis_literal_expr(&self) -> Option<&crate::ExprEllipsisLiteral> {
+    pub const fn as_ellipsis_literal_expr(&self) -> Option<&crate::ExprEllipsisLiteral> {
         match self {
             Self::EllipsisLiteral(val) => Some(val),
             _ => None,
@@ -2558,7 +2562,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_attribute_expr_mut(&mut self) -> Option<&mut crate::ExprAttribute> {
+    pub const fn as_attribute_expr_mut(&mut self) -> Option<&mut crate::ExprAttribute> {
         match self {
             Self::Attribute(val) => Some(val),
             _ => None,
@@ -2566,7 +2570,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_attribute_expr(&self) -> Option<&crate::ExprAttribute> {
+    pub const fn as_attribute_expr(&self) -> Option<&crate::ExprAttribute> {
         match self {
             Self::Attribute(val) => Some(val),
             _ => None,
@@ -2595,7 +2599,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_subscript_expr_mut(&mut self) -> Option<&mut crate::ExprSubscript> {
+    pub const fn as_subscript_expr_mut(&mut self) -> Option<&mut crate::ExprSubscript> {
         match self {
             Self::Subscript(val) => Some(val),
             _ => None,
@@ -2603,7 +2607,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_subscript_expr(&self) -> Option<&crate::ExprSubscript> {
+    pub const fn as_subscript_expr(&self) -> Option<&crate::ExprSubscript> {
         match self {
             Self::Subscript(val) => Some(val),
             _ => None,
@@ -2632,7 +2636,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_starred_expr_mut(&mut self) -> Option<&mut crate::ExprStarred> {
+    pub const fn as_starred_expr_mut(&mut self) -> Option<&mut crate::ExprStarred> {
         match self {
             Self::Starred(val) => Some(val),
             _ => None,
@@ -2640,7 +2644,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_starred_expr(&self) -> Option<&crate::ExprStarred> {
+    pub const fn as_starred_expr(&self) -> Option<&crate::ExprStarred> {
         match self {
             Self::Starred(val) => Some(val),
             _ => None,
@@ -2669,7 +2673,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_name_expr_mut(&mut self) -> Option<&mut crate::ExprName> {
+    pub const fn as_name_expr_mut(&mut self) -> Option<&mut crate::ExprName> {
         match self {
             Self::Name(val) => Some(val),
             _ => None,
@@ -2677,7 +2681,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_name_expr(&self) -> Option<&crate::ExprName> {
+    pub const fn as_name_expr(&self) -> Option<&crate::ExprName> {
         match self {
             Self::Name(val) => Some(val),
             _ => None,
@@ -2706,7 +2710,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_list_expr_mut(&mut self) -> Option<&mut crate::ExprList> {
+    pub const fn as_list_expr_mut(&mut self) -> Option<&mut crate::ExprList> {
         match self {
             Self::List(val) => Some(val),
             _ => None,
@@ -2714,7 +2718,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_list_expr(&self) -> Option<&crate::ExprList> {
+    pub const fn as_list_expr(&self) -> Option<&crate::ExprList> {
         match self {
             Self::List(val) => Some(val),
             _ => None,
@@ -2743,7 +2747,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_tuple_expr_mut(&mut self) -> Option<&mut crate::ExprTuple> {
+    pub const fn as_tuple_expr_mut(&mut self) -> Option<&mut crate::ExprTuple> {
         match self {
             Self::Tuple(val) => Some(val),
             _ => None,
@@ -2751,7 +2755,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_tuple_expr(&self) -> Option<&crate::ExprTuple> {
+    pub const fn as_tuple_expr(&self) -> Option<&crate::ExprTuple> {
         match self {
             Self::Tuple(val) => Some(val),
             _ => None,
@@ -2780,7 +2784,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_slice_expr_mut(&mut self) -> Option<&mut crate::ExprSlice> {
+    pub const fn as_slice_expr_mut(&mut self) -> Option<&mut crate::ExprSlice> {
         match self {
             Self::Slice(val) => Some(val),
             _ => None,
@@ -2788,7 +2792,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_slice_expr(&self) -> Option<&crate::ExprSlice> {
+    pub const fn as_slice_expr(&self) -> Option<&crate::ExprSlice> {
         match self {
             Self::Slice(val) => Some(val),
             _ => None,
@@ -2817,7 +2821,9 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_ipy_escape_command_expr_mut(&mut self) -> Option<&mut crate::ExprIpyEscapeCommand> {
+    pub const fn as_ipy_escape_command_expr_mut(
+        &mut self,
+    ) -> Option<&mut crate::ExprIpyEscapeCommand> {
         match self {
             Self::IpyEscapeCommand(val) => Some(val),
             _ => None,
@@ -2825,7 +2831,7 @@ impl Expr {
     }
 
     #[inline]
-    pub fn as_ipy_escape_command_expr(&self) -> Option<&crate::ExprIpyEscapeCommand> {
+    pub const fn as_ipy_escape_command_expr(&self) -> Option<&crate::ExprIpyEscapeCommand> {
         match self {
             Self::IpyEscapeCommand(val) => Some(val),
             _ => None,
@@ -2884,14 +2890,16 @@ impl ExceptHandler {
     }
 
     #[inline]
-    pub fn as_except_handler_mut(&mut self) -> Option<&mut crate::ExceptHandlerExceptHandler> {
+    pub const fn as_except_handler_mut(
+        &mut self,
+    ) -> Option<&mut crate::ExceptHandlerExceptHandler> {
         match self {
             Self::ExceptHandler(val) => Some(val),
         }
     }
 
     #[inline]
-    pub fn as_except_handler(&self) -> Option<&crate::ExceptHandlerExceptHandler> {
+    pub const fn as_except_handler(&self) -> Option<&crate::ExceptHandlerExceptHandler> {
         match self {
             Self::ExceptHandler(val) => Some(val),
         }
@@ -2959,7 +2967,7 @@ impl InterpolatedStringElement {
     }
 
     #[inline]
-    pub fn as_interpolation_mut(&mut self) -> Option<&mut crate::InterpolatedElement> {
+    pub const fn as_interpolation_mut(&mut self) -> Option<&mut crate::InterpolatedElement> {
         match self {
             Self::Interpolation(val) => Some(val),
             _ => None,
@@ -2967,7 +2975,7 @@ impl InterpolatedStringElement {
     }
 
     #[inline]
-    pub fn as_interpolation(&self) -> Option<&crate::InterpolatedElement> {
+    pub const fn as_interpolation(&self) -> Option<&crate::InterpolatedElement> {
         match self {
             Self::Interpolation(val) => Some(val),
             _ => None,
@@ -2996,7 +3004,7 @@ impl InterpolatedStringElement {
     }
 
     #[inline]
-    pub fn as_literal_mut(&mut self) -> Option<&mut crate::InterpolatedStringLiteralElement> {
+    pub const fn as_literal_mut(&mut self) -> Option<&mut crate::InterpolatedStringLiteralElement> {
         match self {
             Self::Literal(val) => Some(val),
             _ => None,
@@ -3004,7 +3012,7 @@ impl InterpolatedStringElement {
     }
 
     #[inline]
-    pub fn as_literal(&self) -> Option<&crate::InterpolatedStringLiteralElement> {
+    pub const fn as_literal(&self) -> Option<&crate::InterpolatedStringLiteralElement> {
         match self {
             Self::Literal(val) => Some(val),
             _ => None,
@@ -3128,7 +3136,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_value_mut(&mut self) -> Option<&mut crate::PatternMatchValue> {
+    pub const fn as_match_value_mut(&mut self) -> Option<&mut crate::PatternMatchValue> {
         match self {
             Self::MatchValue(val) => Some(val),
             _ => None,
@@ -3136,7 +3144,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_value(&self) -> Option<&crate::PatternMatchValue> {
+    pub const fn as_match_value(&self) -> Option<&crate::PatternMatchValue> {
         match self {
             Self::MatchValue(val) => Some(val),
             _ => None,
@@ -3165,7 +3173,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_singleton_mut(&mut self) -> Option<&mut crate::PatternMatchSingleton> {
+    pub const fn as_match_singleton_mut(&mut self) -> Option<&mut crate::PatternMatchSingleton> {
         match self {
             Self::MatchSingleton(val) => Some(val),
             _ => None,
@@ -3173,7 +3181,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_singleton(&self) -> Option<&crate::PatternMatchSingleton> {
+    pub const fn as_match_singleton(&self) -> Option<&crate::PatternMatchSingleton> {
         match self {
             Self::MatchSingleton(val) => Some(val),
             _ => None,
@@ -3202,7 +3210,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_sequence_mut(&mut self) -> Option<&mut crate::PatternMatchSequence> {
+    pub const fn as_match_sequence_mut(&mut self) -> Option<&mut crate::PatternMatchSequence> {
         match self {
             Self::MatchSequence(val) => Some(val),
             _ => None,
@@ -3210,7 +3218,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_sequence(&self) -> Option<&crate::PatternMatchSequence> {
+    pub const fn as_match_sequence(&self) -> Option<&crate::PatternMatchSequence> {
         match self {
             Self::MatchSequence(val) => Some(val),
             _ => None,
@@ -3239,7 +3247,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_mapping_mut(&mut self) -> Option<&mut crate::PatternMatchMapping> {
+    pub const fn as_match_mapping_mut(&mut self) -> Option<&mut crate::PatternMatchMapping> {
         match self {
             Self::MatchMapping(val) => Some(val),
             _ => None,
@@ -3247,7 +3255,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_mapping(&self) -> Option<&crate::PatternMatchMapping> {
+    pub const fn as_match_mapping(&self) -> Option<&crate::PatternMatchMapping> {
         match self {
             Self::MatchMapping(val) => Some(val),
             _ => None,
@@ -3276,7 +3284,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_class_mut(&mut self) -> Option<&mut crate::PatternMatchClass> {
+    pub const fn as_match_class_mut(&mut self) -> Option<&mut crate::PatternMatchClass> {
         match self {
             Self::MatchClass(val) => Some(val),
             _ => None,
@@ -3284,7 +3292,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_class(&self) -> Option<&crate::PatternMatchClass> {
+    pub const fn as_match_class(&self) -> Option<&crate::PatternMatchClass> {
         match self {
             Self::MatchClass(val) => Some(val),
             _ => None,
@@ -3313,7 +3321,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_star_mut(&mut self) -> Option<&mut crate::PatternMatchStar> {
+    pub const fn as_match_star_mut(&mut self) -> Option<&mut crate::PatternMatchStar> {
         match self {
             Self::MatchStar(val) => Some(val),
             _ => None,
@@ -3321,7 +3329,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_star(&self) -> Option<&crate::PatternMatchStar> {
+    pub const fn as_match_star(&self) -> Option<&crate::PatternMatchStar> {
         match self {
             Self::MatchStar(val) => Some(val),
             _ => None,
@@ -3350,7 +3358,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_as_mut(&mut self) -> Option<&mut crate::PatternMatchAs> {
+    pub const fn as_match_as_mut(&mut self) -> Option<&mut crate::PatternMatchAs> {
         match self {
             Self::MatchAs(val) => Some(val),
             _ => None,
@@ -3358,7 +3366,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_as(&self) -> Option<&crate::PatternMatchAs> {
+    pub const fn as_match_as(&self) -> Option<&crate::PatternMatchAs> {
         match self {
             Self::MatchAs(val) => Some(val),
             _ => None,
@@ -3387,7 +3395,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_or_mut(&mut self) -> Option<&mut crate::PatternMatchOr> {
+    pub const fn as_match_or_mut(&mut self) -> Option<&mut crate::PatternMatchOr> {
         match self {
             Self::MatchOr(val) => Some(val),
             _ => None,
@@ -3395,7 +3403,7 @@ impl Pattern {
     }
 
     #[inline]
-    pub fn as_match_or(&self) -> Option<&crate::PatternMatchOr> {
+    pub const fn as_match_or(&self) -> Option<&crate::PatternMatchOr> {
         match self {
             Self::MatchOr(val) => Some(val),
             _ => None,
@@ -3474,7 +3482,7 @@ impl TypeParam {
     }
 
     #[inline]
-    pub fn as_type_var_mut(&mut self) -> Option<&mut crate::TypeParamTypeVar> {
+    pub const fn as_type_var_mut(&mut self) -> Option<&mut crate::TypeParamTypeVar> {
         match self {
             Self::TypeVar(val) => Some(val),
             _ => None,
@@ -3482,7 +3490,7 @@ impl TypeParam {
     }
 
     #[inline]
-    pub fn as_type_var(&self) -> Option<&crate::TypeParamTypeVar> {
+    pub const fn as_type_var(&self) -> Option<&crate::TypeParamTypeVar> {
         match self {
             Self::TypeVar(val) => Some(val),
             _ => None,
@@ -3511,7 +3519,7 @@ impl TypeParam {
     }
 
     #[inline]
-    pub fn as_type_var_tuple_mut(&mut self) -> Option<&mut crate::TypeParamTypeVarTuple> {
+    pub const fn as_type_var_tuple_mut(&mut self) -> Option<&mut crate::TypeParamTypeVarTuple> {
         match self {
             Self::TypeVarTuple(val) => Some(val),
             _ => None,
@@ -3519,7 +3527,7 @@ impl TypeParam {
     }
 
     #[inline]
-    pub fn as_type_var_tuple(&self) -> Option<&crate::TypeParamTypeVarTuple> {
+    pub const fn as_type_var_tuple(&self) -> Option<&crate::TypeParamTypeVarTuple> {
         match self {
             Self::TypeVarTuple(val) => Some(val),
             _ => None,
@@ -3548,7 +3556,7 @@ impl TypeParam {
     }
 
     #[inline]
-    pub fn as_param_spec_mut(&mut self) -> Option<&mut crate::TypeParamParamSpec> {
+    pub const fn as_param_spec_mut(&mut self) -> Option<&mut crate::TypeParamParamSpec> {
         match self {
             Self::ParamSpec(val) => Some(val),
             _ => None,
@@ -3556,7 +3564,7 @@ impl TypeParam {
     }
 
     #[inline]
-    pub fn as_param_spec(&self) -> Option<&crate::TypeParamParamSpec> {
+    pub const fn as_param_spec(&self) -> Option<&crate::TypeParamParamSpec> {
         match self {
             Self::ParamSpec(val) => Some(val),
             _ => None,
